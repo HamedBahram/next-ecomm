@@ -8,7 +8,7 @@ const inter = Inter({
 })
 
 export const metadata = {
-  title: 'NextJs E-commerce APP',
+  title: 'next ecommerce',
   description: 'Created by Hamed Bahram'
 }
 

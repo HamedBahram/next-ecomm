@@ -1,10 +1,11 @@
-import { getProducts } from '@/lib/swell/products'
-import Products from '@/components/products'
-
-const Page = async () => {
-  const { results: products } = await getProducts({ page: 1 })
-
-  return <Products products={products} />
+const Page = () => {
+  return (
+    <section className='py-24'>
+      <div className='container'>
+        <h1 className='text-2xl font-semibold'>Home page</h1>
+      </div>
+    </section>
+  )
 }
 
 export default Page
