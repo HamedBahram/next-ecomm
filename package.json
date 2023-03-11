@@ -13,9 +13,12 @@
     "eslint-config-next": "13.2.4",
     "next": "13.2.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "swell-js": "^3.20.1",
+    "swell-node": "^4.0.11"
   },
   "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
     "@types/node": "18.15.0",
     "@types/react": "18.0.28",
     "autoprefixer": "^10.4.14",
