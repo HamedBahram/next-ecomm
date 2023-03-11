@@ -1,6 +1,7 @@
 'use client'
 
-import { Fragment } from 'react'
+import { Fragment, useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -10,8 +11,26 @@ import { formatCurrency } from '@/lib/utils'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { removeFromCart } from '@/lib/swell/cart'
+import { useSWRConfig } from 'swr'
 
-const CartSlider = ({ cart, loading, open, setCartSliderIsOpen }) => {
+const CartSlider = ({ cart, cartIsLoading, open, setCartSliderIsOpen }) => {
+  const router = useRouter()
+  const { mutate } = useSWRConfig()
+  const [isPending, startTransition] = useTransition()
+  const [loading, setLoading] = useState(false)
+  const isMutating = loading || isPending
+
+  const removeItem = async itemId => {
+    setLoading(true)
+    await removeFromCart(itemId)
+    setLoading(false)
+    mutate('cart')
+    startTransition(() => {
+      router.refresh()
+    })
+  }
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={setCartSliderIsOpen}>
@@ -106,8 +125,9 @@ const CartSlider = ({ cart, loading, open, setCartSliderIsOpen }) => {
                                       <div className='flex'>
                                         <button
                                           type='button'
-                                          // onClick={() => removeItem(item.id)}
-                                          className='font-medium text-pink-600 hover:text-pink-500'
+                                          disabled={isMutating}
+                                          onClick={() => removeItem(item.id)}
+                                          className='font-medium text-pink-600 hover:text-pink-500 disabled:cursor-not-allowed disabled:opacity-50'
                                         >
                                           Remove
                                         </button>
@@ -136,10 +156,10 @@ const CartSlider = ({ cart, loading, open, setCartSliderIsOpen }) => {
                         <div className='mt-6'>
                           <Link href={cart.checkout_url}>
                             <button
-                              disabled={loading}
+                              disabled={cartIsLoading}
                               className='flex h-12 w-full items-center justify-center rounded-md border border-transparent bg-cyan-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-75'
                             >
-                              {loading ? <Blinker /> : 'Checkout'}
+                              {cartIsLoading ? <Blinker /> : 'Checkout'}
                             </button>
                           </Link>
                         </div>

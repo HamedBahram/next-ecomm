@@ -53,7 +53,7 @@ const Header = () => {
       </header>
       <CartSlider
         cart={cart}
-        loading={isLoading}
+        cartIsloading={isLoading}
         open={cartSliderIsOpen}
         setCartSliderIsOpen={setCartSliderIsOpen}
       />
