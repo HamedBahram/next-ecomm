@@ -1,12 +1,18 @@
 'use client'
 
+import { useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { useSWRConfig } from 'swr'
+
 import clsx from 'clsx'
 
 import { Disclosure, Tab } from '@headlessui/react'
 import { StarIcon } from '@heroicons/react/20/solid'
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { formatCurrency } from '@/lib/utils'
+import { addToCart } from '@/lib/swell/cart'
+import { Blinker } from '@/components/ui/loading'
 
 const details = [
   {
@@ -24,6 +30,27 @@ const details = [
 ]
 
 const Product = ({ product }) => {
+  const router = useRouter()
+  const { mutate } = useSWRConfig()
+  const [isPending, startTransition] = useTransition()
+  const [loading, setLoading] = useState(false)
+
+  const isMutating = loading || isPending
+
+  const handleSubmit = async event => {
+    event.preventDefault()
+    setLoading(true)
+    await addToCart({
+      product_id: product.id,
+      quantity: 1
+    })
+    setLoading(false)
+    mutate('cart')
+    startTransition(() => {
+      router.refresh()
+    })
+  }
+
   return (
     <section className='py-24'>
       <div className='container'>
@@ -36,7 +63,7 @@ const Product = ({ product }) => {
                 {product.images.map(image => (
                   <Tab
                     key={image.id}
-                    className='relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none'
+                    className='relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-stone-900 hover:bg-stone-50 focus:outline-none'
                   >
                     {({ selected }) => (
                       <>
@@ -82,13 +109,13 @@ const Product = ({ product }) => {
 
           {/* Product info */}
           <div className='mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0'>
-            <h1 className='text-3xl font-bold tracking-tight text-gray-900'>
+            <h1 className='text-3xl font-bold tracking-tight text-stone-900'>
               {product.name}
             </h1>
 
             <div className='mt-3'>
               <h2 className='sr-only'>Product information</h2>
-              <p className='text-3xl tracking-tight text-gray-900'>
+              <p className='text-3xl tracking-tight text-stone-900'>
                 {formatCurrency({ amount: product.price })}
               </p>
             </div>
@@ -102,7 +129,9 @@ const Product = ({ product }) => {
                     <StarIcon
                       key={rating}
                       className={clsx(
-                        4 > rating ? 'text-yellow-500' : 'text-gray-300',
+                        (product.rating || 4) > rating
+                          ? 'text-yellow-500'
+                          : 'text-stone-300',
                         'h-5 w-5 flex-shrink-0'
                       )}
                       aria-hidden='true'
@@ -117,18 +146,19 @@ const Product = ({ product }) => {
               <h3 className='sr-only'>Description</h3>
 
               <div
-                className='space-y-6 text-base text-gray-700'
+                className='space-y-6 text-base text-stone-700'
                 dangerouslySetInnerHTML={{ __html: product.description }}
               />
             </div>
 
-            <form className='mt-6'>
+            <form className='mt-6' onSubmit={handleSubmit}>
               <div className='sm:flex-col1 mt-10 flex'>
                 <button
                   type='submit'
-                  className='flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-sky-600 py-3 px-8 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full'
+                  disabled={isMutating}
+                  className='flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-sky-600 py-3 px-8 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-stone-50 disabled:cursor-not-allowed disabled:opacity-50 sm:w-full'
                 >
-                  Add to bag
+                  {isMutating ? <Blinker /> : 'Add to Cart'}
                 </button>
               </div>
             </form>
@@ -138,7 +168,7 @@ const Product = ({ product }) => {
                 Additional details
               </h2>
 
-              <div className='divide-y divide-gray-200 border-t'>
+              <div className='divide-y divide-stone-200 border-t'>
                 {details?.map(detail => (
                   <Disclosure as='div' key={detail.name}>
                     {({ open }) => (
@@ -147,7 +177,7 @@ const Product = ({ product }) => {
                           <Disclosure.Button className='group relative flex w-full items-center justify-between py-6 text-left'>
                             <span
                               className={clsx(
-                                open ? 'text-sky-600' : 'text-gray-900',
+                                open ? 'text-sky-600' : 'text-stone-900',
                                 'text-sm font-medium'
                               )}
                             >
@@ -161,7 +191,7 @@ const Product = ({ product }) => {
                                 />
                               ) : (
                                 <PlusIcon
-                                  className='block h-6 w-6 text-gray-400 group-hover:text-gray-500'
+                                  className='block h-6 w-6 text-stone-400 group-hover:text-stone-500'
                                   aria-hidden='true'
                                 />
                               )}
