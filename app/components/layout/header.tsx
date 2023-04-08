@@ -18,13 +18,13 @@ const Header = () => {
 
   return (
     <>
-      <header className='bg-stone-100 py-10'>
+      <header className='z-10 py-10 text-stone-400'>
         <nav className='container flex items-center justify-between'>
           {/* Logo */}
           <div>
             <Link
               href='/'
-              className='text-xl font-bold uppercase tracking-widest'
+              className='text-2xl font-bold uppercase tracking-widest'
             >
               CAFE
             </Link>
@@ -32,13 +32,13 @@ const Header = () => {
 
           {/* Nav links */}
           <ul className='flex items-center gap-10'>
-            <li className='text-xs font-medium uppercase tracking-wider text-stone-500'>
+            <li className='text-sm font-medium uppercase tracking-wider'>
               <Link href='/products'>Products</Link>
             </li>
           </ul>
 
           {/* Shopping cart */}
-          <div className='flex items-center justify-between gap-4'>
+          <div className='flex items-center justify-between gap-6'>
             <button
               className='flex items-center gap-x-2 pl-4'
               onClick={() => setCartSliderIsOpen(open => !open)}

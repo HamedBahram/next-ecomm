@@ -23,7 +23,7 @@ const RootLayout = ({ children }) => {
       <body className='flex h-full flex-col text-stone-700'>
         <ClerkProvider>
           <Header />
-          <main className='grow '>{children}</main>
+          <main className='grow'>{children}</main>
           <Footer />
         </ClerkProvider>
       </body>

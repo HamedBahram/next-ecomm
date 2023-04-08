@@ -9,12 +9,12 @@ const Page = () => {
         <Image
           alt=''
           src={heroImage}
-          className='absolute inset-0 -z-10 h-full w-full object-cover'
+          className='fixed inset-0 -z-10 h-full w-full object-cover'
         />
 
         <div
           aria-hidden='true'
-          className='absolute inset-0 -z-10 bg-black/70 bg-blend-multiply'
+          className='fixed inset-0 -z-10 bg-black/70 bg-blend-multiply'
         />
 
         <div className='mx-auto max-w-2xl py-32 px-4 sm:py-48 md:px-6 lg:py-56 xl:px-8'>
