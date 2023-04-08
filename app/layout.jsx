@@ -1,3 +1,5 @@
+import { ClerkProvider } from '@clerk/nextjs/app-beta'
+
 import Footer from '@/components/layout/footer'
 import Header from '@/components/layout/header'
 import { Inter } from 'next/font/google'
@@ -19,9 +21,11 @@ const RootLayout = ({ children }) => {
       className={`${inter.className} h-full scroll-smooth antialiased`}
     >
       <body className='flex h-full flex-col text-stone-700'>
-        <Header />
-        <main className='grow '>{children}</main>
-        <Footer />
+        <ClerkProvider>
+          <Header />
+          <main className='grow '>{children}</main>
+          <Footer />
+        </ClerkProvider>
       </body>
     </html>
   )

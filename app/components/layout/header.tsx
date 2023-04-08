@@ -9,6 +9,9 @@ import CartSlider from '@/components/cart-slider'
 import { getCart } from '@/lib/swell/cart'
 import { ShoppingCartIcon } from '@heroicons/react/24/outline'
 
+import { SignInButton, UserButton } from '@clerk/nextjs'
+import { SignedIn, SignedOut } from '@clerk/nextjs/app-beta/client'
+
 const Header = () => {
   const { data: cart, isLoading } = useSWR('cart', getCart)
   const [cartSliderIsOpen, setCartSliderIsOpen] = useState(false)
@@ -35,7 +38,7 @@ const Header = () => {
           </ul>
 
           {/* Shopping cart */}
-          <div>
+          <div className='flex items-center justify-between gap-4'>
             <button
               className='flex items-center gap-x-2 pl-4'
               onClick={() => setCartSliderIsOpen(open => !open)}
@@ -48,6 +51,16 @@ const Header = () => {
                 </span>
               ) : null}
             </button>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+            <SignedOut>
+              <SignInButton mode='modal'>
+                <button className='rounded border border-gray-400 px-3 py-0.5'>
+                  Sign in
+                </button>
+              </SignInButton>
+            </SignedOut>
           </div>
         </nav>
       </header>
