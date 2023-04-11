@@ -35,6 +35,11 @@ const Header = () => {
             <li className='text-sm font-medium uppercase tracking-wider'>
               <Link href='/products'>Products</Link>
             </li>
+            <SignedIn>
+              <li className='text-sm font-medium uppercase tracking-wider'>
+                <Link href='/dashboard'>Dashboard</Link>
+              </li>
+            </SignedIn>
           </ul>
 
           {/* Shopping cart */}
